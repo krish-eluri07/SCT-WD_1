@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Landing Page</title>
+    <style>
+        /* --- Reset & Base Styles --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: #f4f7f6;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* --- Fixed Navigation Menu --- */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px 10%;
+            z-index: 1000;
+            transition: all 0.4s ease-in-out;
+            background-color: transparent;
+        }
+
+        /* Style change triggered by JavaScript on scroll */
+        .navbar.scrolled {
+            background-color: #ffffff;
+            padding: 15px 10%;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #fff;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .navbar.scrolled .logo {
+            color: #2c3e50;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.85);
+            font-weight: 500;
+            font-size: 16px;
+            position: relative;
+            padding: 5px 0;
+            transition: color 0.3s ease;
+        }
+
+        /* Target links when navbar is scrolled */
+        .navbar.scrolled .nav-links a {
+            color: #555;
+        }
+
+        /* --- Hover Effects --- */
+        .nav-links a:hover {
+            color: #fff;
+        }
+
+        .navbar.scrolled .nav-links a:hover {
+            color: #3498db;
+        }
+
+        /* Animated underline on hover */
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: #3498db;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* --- Mobile Menu Toggle --- */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background-color: #fff;
+            transition: 0.3s;
+        }
+
+        .navbar.scrolled .menu-toggle span {
+            background-color: #2c3e50;
+        }
+
+        /* --- Section Styles --- */
+        section {
+            padding: 100px 10%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        #home {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
+                        url('https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=2070') no-repeat center center/cover;
+            color: #fff;
+            text-align: center;
+            align-items: center;
+        }
+
+        #home h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        #home p {
+            font-size: 20px;
+            max-width: 600px;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            background-color: #3498db;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #2980b9;
+        }
+
+        #about { background-color: #ffffff; }
+        #services { background-color: #f9f9f9; }
+        #contact { background-color: #2c3e50; color: #fff; }
+
+        section h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        section h2::after {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 4px;
+            background-color: #3498db;
+            margin-top: 10px;
+        }
+
+        /* --- Responsive Design (Tablets/Phones) --- */
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: flex;
+            }
+
+            .nav-links {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background-color: #2c3e50;
+                flex-direction: column;
+                align-items: center;
+                padding: 20px 0;
+                gap: 20px;
+                opacity: 0;
+                transform: translateY(-20px);
+                pointer-events: none;
+                transition: all 0.3s ease;
+            }
+
+            /* When navbar is scrolled down, keep mobile dropdown matching */
+            .navbar.scrolled .nav-links {
+                background-color: #ffffff;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            }
+
+            .nav-links.active {
+                opacity: 1;
+                transform: translateY(0);
+                pointer-events: auto;
+            }
+
+            .nav-links a {
+                color: #fff !important;
+            }
+
+            .navbar.scrolled .nav-links a {
+                color: #333 !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar" id="navbar">
+        <a href="#home" class="logo">Brand.</a>
+        <div class="menu-toggle" id="mobile-menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <ul class="nav-links" id="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <section id="home">
+        <h1>Welcome to NextGen</h1>
+        <p>Scroll down to see the magic happen to the navigation bar. Hover over the links to experience sleek interactions.</p>
+        <a href="#about" class="btn">Get Started</a>
+    </section>
+
+    <section id="about">
+        <h2>About Us</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vis alterum conceptam in, per ad idque definiebas. Te animal scripserit inciderint qui, eos te dicit eripuit.</p>
+    </section>
+
+    <section id="services">
+        <h2>Our Services</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vis alterum conceptam in, per ad idque definiebas. Te animal scripserit inciderint qui, eos te dicit eripuit.</p>
+    </section>
+
+    <section id="contact">
+        <h2>Contact Us</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vis alterum conceptam in, per ad idque definiebas.</p>
+    </section>
+
+    <script>
+        const navbar = document.getElementById('navbar');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const navLinks = document.getElementById('nav-links');
+
+        // 1. Change Navbar style on Scroll
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // 2. Mobile Responsive Menu Toggle
+        mobileMenu.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        // Close mobile menu when a link is clicked
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
+        });
+    </script>
+          <h1>live server</h1>
+</body>
+</html>
